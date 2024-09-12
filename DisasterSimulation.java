@@ -11,17 +11,17 @@ class RescueTeam {
 
   // Method to use resources
   public void useResources(int amount) {
-      if (resources >= amount) {
-          resources -= amount;
-          System.out.println(teamName + " used " + amount + " resources.");
+      if (this.resources >= amount) {
+          this.resources -= amount;
+          System.out.println(this.teamName + " used " + amount + " resources.");
       } else {
-          System.out.println(teamName + " does not have enough resources!");
+          System.out.println(this.teamName + " does not have enough resources!");
       }
   }
 
   // Method to display team status
   public void displayStatus() {
-      System.out.println("Team: " + teamName + ", Resources: " + resources);
+      System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
   }
 }
 
@@ -40,9 +40,9 @@ class AffectedArea {
 
   // Method to reduce the number of victims
   public void rescueVictims(int count) {
-      if (victims >= count) {
-          victims -= count;
-          System.out.println(count + " victims have been rescued.");
+      if (this.victims >= count) {
+          this.victims -= count;
+          System.out.println(count + " victims have been rescued  in." + this.location);
       } else {
           System.out.println("Not enough victims to rescue!");
       }
@@ -50,7 +50,7 @@ class AffectedArea {
 
   // Method to display the area's status
   public void displayAreaStatus() {
-      System.out.println("Location: " + location + ", Victims: " + victims + ", Damage Level: " + damageLevel);
+      System.out.println("Location: " + this.location + ", Victims: " + this.victims + ", Damage Level: " + this.damageLevel);
   }
 }
 
