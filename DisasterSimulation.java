@@ -56,23 +56,37 @@ class AffectedArea {
 
 // Main class to run the disaster simulation
 public class DisasterSimulation {
-  public static void main(String[] args) {
-      // Creating a rescue team object
-      RescueTeam medicalTeam = new RescueTeam("Medical Unit", 100);
+    public static void main(String[] args) {
+        // Creating an array of RescueTeam objects
+        RescueTeam[] teams = new RescueTeam[3];
+        teams[0] = new RescueTeam("Medical Unit", 100);
+        teams[1] = new RescueTeam("Fire Brigade", 80);
+        teams[2] = new RescueTeam("Search and Rescue", 90);
 
-      // Creating an affected area object
-      AffectedArea area1 = new AffectedArea("Downtown", 50, 80);
+        // Creating an array of AffectedArea objects
+        AffectedArea[] areas = new AffectedArea[2];
+        areas[0] = new AffectedArea("Downtown", 50, 80);
+        areas[1] = new AffectedArea("Suburb", 30, 60);
 
-      // Displaying initial status
-      medicalTeam.displayStatus();
-      area1.displayAreaStatus();
+        // Displaying status of all teams
+        System.out.println("Rescue Teams Status:");
+        for (RescueTeam team : teams) {
+            team.displayStatus();
+        }
 
-      // Using resources and rescuing victims
-      medicalTeam.useResources(20);
-      area1.rescueVictims(10);
+        // Displaying status of all areas
+        System.out.println("\nAffected Areas Status:");
+        for (AffectedArea area : areas) {
+            area.displayAreaStatus();
+        }
 
-      // Displaying updated status
-      medicalTeam.displayStatus();
-      area1.displayAreaStatus();
-  }
+        // Performing rescue operations
+        teams[0].useResources(20);
+        areas[0].rescueVictims(10);
+
+        // Displaying updated status
+        System.out.println("\nUpdated Status:");
+        teams[0].displayStatus();
+        areas[0].displayAreaStatus();
+    }
 }
