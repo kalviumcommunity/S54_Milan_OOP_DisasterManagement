@@ -2,11 +2,13 @@
 class RescueTeam {
     String teamName;
     int resources;
+    static int totalRescueTeams = 0;  // Static variable to keep track of total rescue teams
 
     // Constructor
     public RescueTeam(String teamName, int resources) {
         this.teamName = teamName;
         this.resources = resources;
+        totalRescueTeams++;  // Incrementing the count when a new team is created
     }
 
     // Method to use resources
@@ -23,6 +25,11 @@ class RescueTeam {
     public void displayStatus() {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
     }
+
+    // Static method to display total rescue teams
+    public static void displayTotalRescueTeams() {
+        System.out.println("Total Rescue Teams: " + totalRescueTeams);
+    }
 }
 
 // Class to represent an Affected Area
@@ -30,12 +37,14 @@ class AffectedArea {
     String location;
     int victims;
     int damageLevel;
+    static int totalAffectedAreas = 0;  // Static variable to keep track of total affected areas
 
     // Constructor
     public AffectedArea(String location, int victims, int damageLevel) {
         this.location = location;
         this.victims = victims;
         this.damageLevel = damageLevel;
+        totalAffectedAreas++;  // Incrementing the count when a new area is created
     }
 
     // Method to rescue victims
@@ -51,6 +60,11 @@ class AffectedArea {
     // Method to display area status
     public void displayAreaStatus() {
         System.out.println("Location: " + this.location + ", Victims: " + this.victims + ", Damage Level: " + this.damageLevel);
+    }
+
+    // Static method to display total affected areas
+    public static void displayTotalAffectedAreas() {
+        System.out.println("Total Affected Areas: " + totalAffectedAreas);
     }
 }
 
@@ -88,5 +102,9 @@ public class DisasterSimulation {
         System.out.println("\nUpdated Status:");
         teams[0].displayStatus();
         areas[0].displayAreaStatus();
+
+        // Displaying total counts
+        RescueTeam.displayTotalRescueTeams();
+        AffectedArea.displayTotalAffectedAreas();
     }
 }
