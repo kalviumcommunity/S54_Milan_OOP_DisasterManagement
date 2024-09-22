@@ -103,7 +103,7 @@ public class DisasterSimulation {
         teams[0].displayStatus();
         areas[0].displayAreaStatus();
 
-        // Displaying total counts
+        // Displaying total counts using static member functions
         RescueTeam.displayTotalRescueTeams();
         AffectedArea.displayTotalAffectedAreas();
     }
