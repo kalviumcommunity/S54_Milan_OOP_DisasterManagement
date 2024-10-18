@@ -1,14 +1,32 @@
 // Class to represent a Rescue Team
 class RescueTeam {
-    String teamName;
-    int resources;
-    static int totalRescueTeams = 0;  // Static variable to keep track of total rescue teams
+    private String teamName;  // Encapsulated field (private)
+    private int resources;    // Encapsulated field (private)
 
     // Constructor
     public RescueTeam(String teamName, int resources) {
         this.teamName = teamName;
         this.resources = resources;
-        totalRescueTeams++;  // Incrementing the count when a new team is created
+    }
+
+    // Accessor (Getter) for teamName
+    public String getTeamName() {
+        return teamName;
+    }
+
+    // Mutator (Setter) for teamName
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    // Accessor (Getter) for resources
+    public int getResources() {
+        return resources;
+    }
+
+    // Mutator (Setter) for resources
+    public void setResources(int resources) {
+        this.resources = resources;
     }
 
     // Method to use resources
@@ -25,26 +43,49 @@ class RescueTeam {
     public void displayStatus() {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
     }
-
-    // Static method to display total rescue teams
-    public static void displayTotalRescueTeams() {
-        System.out.println("Total Rescue Teams: " + totalRescueTeams);
-    }
 }
 
 // Class to represent an Affected Area
 class AffectedArea {
-    String location;
-    int victims;
-    int damageLevel;
-    static int totalAffectedAreas = 0;  // Static variable to keep track of total affected areas
+    private String location;     // Encapsulated field (private)
+    private int victims;         // Encapsulated field (private)
+    private int damageLevel;     // Encapsulated field (private)
 
     // Constructor
     public AffectedArea(String location, int victims, int damageLevel) {
         this.location = location;
         this.victims = victims;
         this.damageLevel = damageLevel;
-        totalAffectedAreas++;  // Incrementing the count when a new area is created
+    }
+
+    // Accessor (Getter) for location
+    public String getLocation() {
+        return location;
+    }
+
+    // Mutator (Setter) for location
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    // Accessor (Getter) for victims
+    public int getVictims() {
+        return victims;
+    }
+
+    // Mutator (Setter) for victims
+    public void setVictims(int victims) {
+        this.victims = victims;
+    }
+
+    // Accessor (Getter) for damageLevel
+    public int getDamageLevel() {
+        return damageLevel;
+    }
+
+    // Mutator (Setter) for damageLevel
+    public void setDamageLevel(int damageLevel) {
+        this.damageLevel = damageLevel;
     }
 
     // Method to rescue victims
@@ -60,11 +101,6 @@ class AffectedArea {
     // Method to display area status
     public void displayAreaStatus() {
         System.out.println("Location: " + this.location + ", Victims: " + this.victims + ", Damage Level: " + this.damageLevel);
-    }
-
-    // Static method to display total affected areas
-    public static void displayTotalAffectedAreas() {
-        System.out.println("Total Affected Areas: " + totalAffectedAreas);
     }
 }
 
@@ -103,8 +139,15 @@ public class DisasterSimulation {
         teams[0].displayStatus();
         areas[0].displayAreaStatus();
 
-        // Displaying total counts using static member functions
-        RescueTeam.displayTotalRescueTeams();
-        AffectedArea.displayTotalAffectedAreas();
+        // Demonstrating Encapsulation - Changing values via setters
+        teams[1].setTeamName("Fire Rescue Unit");
+        teams[1].setResources(70);
+        areas[1].setLocation("Countryside");
+        areas[1].setVictims(20);
+
+        // Displaying the updated values using accessors (getters)
+        System.out.println("\nUpdated Team and Area Information:");
+        System.out.println("Team: " + teams[1].getTeamName() + ", Resources: " + teams[1].getResources());
+        System.out.println("Location: " + areas[1].getLocation() + ", Victims: " + areas[1].getVictims());
     }
 }
