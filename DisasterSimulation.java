@@ -1,92 +1,93 @@
 // Class to represent a Rescue Team
 class RescueTeam {
-    private String teamName;  // Private variables, hidden from external access
-    private int resources;    // Private variable for abstraction
+    private String teamName;
+    private int resources;
 
-    // Constructor
+    // Default Constructor
+    public RescueTeam() {
+        this.teamName = "Unknown Team";
+        this.resources = 50; // default resources
+        System.out.println("Default Constructor called: " + this.teamName);
+    }
+
+    // Parameterized Constructor
     public RescueTeam(String teamName, int resources) {
         this.teamName = teamName;
         this.resources = resources;
+        System.out.println("Parameterized Constructor called: " + this.teamName);
     }
 
-    // Public method to use resources (abstracts the internal resources usage logic)
-    public void useResources(int amount) {
-        if (this.resources >= amount) {
-            this.resources -= amount;
-            System.out.println(this.teamName + " used " + amount + " resources.");
-        } else {
-            System.out.println(this.teamName + " does not have enough resources!");
-        }
+    // Accessor method
+    public String getTeamName() {
+        return teamName;
     }
 
-    // Public method to display team status
+    // Mutator method
+    public void setTeamName(String teamName) {
+        this.teamName = teamName;
+    }
+
+    // Method to display team status
     public void displayStatus() {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
+    }
+    
+    // Destructor-like behavior (Java doesn't have explicit destructors)
+    protected void finalize() throws Throwable {
+        System.out.println("Destructor (finalize) called for team: " + this.teamName);
+        super.finalize();
     }
 }
 
 // Class to represent an Affected Area
 class AffectedArea {
-    private String location;  // Private data members for abstraction
+    private String location;
     private int victims;
-    private int damageLevel;
 
-    // Constructor
-    public AffectedArea(String location, int victims, int damageLevel) {
+    // Parameterized Constructor
+    public AffectedArea(String location, int victims) {
         this.location = location;
         this.victims = victims;
-        this.damageLevel = damageLevel;
     }
 
-    // Public method to rescue victims
-    public void rescueVictims(int count) {
-        if (this.victims >= count) {
-            this.victims -= count;
-            System.out.println(count + " victims have been rescued in " + this.location);
-        } else {
-            System.out.println("Not enough victims to rescue!");
-        }
+    // Accessor and Mutator methods for encapsulation
+    public String getLocation() {
+        return location;
     }
 
-    // Public method to display area status
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public int getVictims() {
+        return victims;
+    }
+
+    public void setVictims(int victims) {
+        this.victims = victims;
+    }
+
+    // Method to display area status
     public void displayAreaStatus() {
-        System.out.println("Location: " + this.location + ", Victims: " + this.victims + ", Damage Level: " + this.damageLevel);
+        System.out.println("Location: " + this.location + ", Victims: " + this.victims);
     }
 }
 
 // Main class to run the disaster simulation
 public class DisasterSimulation {
     public static void main(String[] args) {
-        // Creating an array of RescueTeam objects
-        RescueTeam[] teams = new RescueTeam[3];
-        teams[0] = new RescueTeam("Medical Unit", 100);
-        teams[1] = new RescueTeam("Fire Brigade", 80);
-        teams[2] = new RescueTeam("Search and Rescue", 90);
+        // Using the default constructor
+        RescueTeam team1 = new RescueTeam();
+        team1.displayStatus();
 
-        // Creating an array of AffectedArea objects
-        AffectedArea[] areas = new AffectedArea[2];
-        areas[0] = new AffectedArea("Downtown", 50, 80);
-        areas[1] = new AffectedArea("Suburb", 30, 60);
+        // Using the parameterized constructor
+        RescueTeam team2 = new RescueTeam("Fire Brigade", 80);
+        team2.displayStatus();
+        
+        // Creating an affected area using the parameterized constructor
+        AffectedArea area = new AffectedArea("Downtown", 100);
+        area.displayAreaStatus();
 
-        // Displaying status of all teams
-        System.out.println("Rescue Teams Status:");
-        for (RescueTeam team : teams) {
-            team.displayStatus();
-        }
-
-        // Displaying status of all areas
-        System.out.println("\nAffected Areas Status:");
-        for (AffectedArea area : areas) {
-            area.displayAreaStatus();
-        }
-
-        // Performing rescue operations
-        teams[0].useResources(20);
-        areas[0].rescueVictims(10);
-
-        // Displaying updated status
-        System.out.println("\nUpdated Status:");
-        teams[0].displayStatus();
-        areas[0].displayAreaStatus();
+        // Destructor will be called automatically by garbage collection when the objects go out of scope.
     }
 }
