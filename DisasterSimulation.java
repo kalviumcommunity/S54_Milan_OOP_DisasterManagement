@@ -14,7 +14,7 @@ class Team {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
     }
 
-    // Method to use resources
+    // Method to use resources (Base method)
     public void useResources(int amount) {
         if (this.resources >= amount) {
             this.resources -= amount;
@@ -35,12 +35,24 @@ class RescueTeam extends Team {
         this.missionsCompleted = missionsCompleted;
     }
 
-    // Method to perform a rescue mission
-    public void performMission(int resourceUsed) {
+    // Method to perform a rescue mission (Overriding the useResources method)
+    @Override
+    public void useResources(int amount) {
+        // Custom behavior for RescueTeam
+        if (this.resources >= amount) {
+            this.resources -= amount;
+            System.out.println(this.teamName + " used " + amount + " resources for rescue missions.");
+        } else {
+            System.out.println(this.teamName + " does not have enough resources to complete the rescue mission!");
+        }
+    }
+
+    // Method to perform a rescue mission with additional parameters (Function Overloading)
+    public void performMission(int resourceUsed, String missionType) {
         if (this.resources >= resourceUsed) {
-            useResources(resourceUsed);
+            useResources(resourceUsed); // Use the overridden method
             this.missionsCompleted++;
-            System.out.println(this.teamName + " completed a mission. Total missions: " + this.missionsCompleted);
+            System.out.println(this.teamName + " completed a " + missionType + " mission. Total missions: " + this.missionsCompleted);
         } else {
             System.out.println("Not enough resources to complete the mission!");
         }
@@ -57,10 +69,22 @@ class MedicalTeam extends RescueTeam {
         this.patientsTreated = patientsTreated;
     }
 
-    // Method to treat patients
-    public void treatPatients(int patients) {
+    // Method to treat patients (Overriding the useResources method)
+    @Override
+    public void useResources(int amount) {
+        // Custom behavior for MedicalTeam
+        if (this.resources >= amount) {
+            this.resources -= amount;
+            System.out.println(this.teamName + " used " + amount + " resources to treat patients.");
+        } else {
+            System.out.println(this.teamName + " does not have enough resources to treat patients!");
+        }
+    }
+
+    // Method to treat patients (Function Overloading)
+    public void treatPatients(int patients, String patientType) {
         this.patientsTreated += patients;
-        System.out.println(this.teamName + " treated " + patients + " patients. Total patients treated: " + this.patientsTreated);
+        System.out.println(this.teamName + " treated " + patients + " " + patientType + " patients. Total patients treated: " + this.patientsTreated);
     }
 }
 
@@ -113,13 +137,16 @@ public class DisasterSimulation {
         downtown.displayAreaStatus();
         suburb.displayAreaStatus();
 
-        // Perform actions
+        // Perform actions (Demonstrating Polymorphism)
         System.out.println("\nPerforming Rescue Missions:");
-        fireBrigade.performMission(20); // Fire Brigade performs a rescue mission
+        fireBrigade.useResources(20); // Fire Brigade uses resources
         downtown.rescueVictims(10);
 
         System.out.println("\nMedical Team Treating Patients:");
-        medicalUnit.treatPatients(15);
+        medicalUnit.treatPatients(15, "critical"); // Medical Team treats critical patients
+
+        // Perform Rescue Team mission with function overloading
+        fireBrigade.performMission(15, "Fire Rescue");
 
         // Display updated status
         System.out.println("\nUpdated Team Status:");
