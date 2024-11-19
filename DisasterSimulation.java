@@ -1,5 +1,5 @@
-// Base Class: Team
-class Team {
+// Abstract Base Class: Team
+abstract class Team {
     protected String teamName;
     protected int resources;
 
@@ -9,19 +9,12 @@ class Team {
         this.resources = resources;
     }
 
+    // Abstract Method to use resources (Virtual Function)
+    public abstract void useResources(int amount);
+
     // Method to display team status
     public void displayStatus() {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
-    }
-
-    // Method to use resources (Base method)
-    public void useResources(int amount) {
-        if (this.resources >= amount) {
-            this.resources -= amount;
-            System.out.println(this.teamName + " used " + amount + " resources.");
-        } else {
-            System.out.println(this.teamName + " does not have enough resources!");
-        }
     }
 }
 
@@ -35,7 +28,7 @@ class RescueTeam extends Team {
         this.missionsCompleted = missionsCompleted;
     }
 
-    // Method to perform a rescue mission (Overriding the useResources method)
+    // Overriding the useResources method (Virtual Function)
     @Override
     public void useResources(int amount) {
         // Custom behavior for RescueTeam
@@ -69,7 +62,7 @@ class MedicalTeam extends RescueTeam {
         this.patientsTreated = patientsTreated;
     }
 
-    // Method to treat patients (Overriding the useResources method)
+    // Overriding the useResources method (Virtual Function)
     @Override
     public void useResources(int amount) {
         // Custom behavior for MedicalTeam
