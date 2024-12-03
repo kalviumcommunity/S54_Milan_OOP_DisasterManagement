@@ -1,24 +1,29 @@
-// Abstract Base Class: Team
-abstract class Team {
+// Interface: TeamActions (Open/Closed Principle Applied)
+interface TeamActions {
+    void useResources(int amount);
+    void displayStatus();
+}
+
+// Abstract Class: Team (Implements the Interface)
+abstract class Team implements TeamActions {
     protected String teamName;
     protected int resources;
 
-    // Constructor
     public Team(String teamName, int resources) {
         this.teamName = teamName;
         this.resources = resources;
     }
 
-    // Abstract Method to use resources (Virtual Function)
-    public abstract void useResources(int amount);
+    @Override
+    public abstract void useResources(int amount); // Force subclasses to implement
 
-    // Method to display team status
+    @Override
     public void displayStatus() {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
     }
 }
 
-// Derived Class: RescueTeam
+// Derived Class 1: RescueTeam
 class RescueTeam extends Team {
     private int missionsCompleted;
 
@@ -33,7 +38,7 @@ class RescueTeam extends Team {
             this.resources -= amount;
             System.out.println(this.teamName + " used " + amount + " resources for rescue missions.");
         } else {
-            System.out.println(this.teamName + " does not have enough resources to complete the rescue mission!");
+            System.out.println(this.teamName + " does not have enough resources for a rescue mission!");
         }
     }
 
@@ -43,17 +48,17 @@ class RescueTeam extends Team {
             this.missionsCompleted++;
             System.out.println(this.teamName + " completed a " + missionType + " mission. Total missions: " + this.missionsCompleted);
         } else {
-            System.out.println("Not enough resources to complete the mission!");
+            System.out.println("Not enough resources to perform the mission!");
         }
     }
 }
 
-// Derived Class: MedicalTeam
-class MedicalTeam extends RescueTeam {
+// Derived Class 2: MedicalTeam
+class MedicalTeam extends Team {
     private int patientsTreated;
 
-    public MedicalTeam(String teamName, int resources, int missionsCompleted, int patientsTreated) {
-        super(teamName, resources, missionsCompleted);
+    public MedicalTeam(String teamName, int resources, int patientsTreated) {
+        super(teamName, resources);
         this.patientsTreated = patientsTreated;
     }
 
@@ -70,6 +75,36 @@ class MedicalTeam extends RescueTeam {
     public void treatPatients(int patients, String patientType) {
         this.patientsTreated += patients;
         System.out.println(this.teamName + " treated " + patients + " " + patientType + " patients. Total patients treated: " + this.patientsTreated);
+    }
+}
+
+// New Derived Class: LogisticsTeam (Open/Closed Extension)
+class LogisticsTeam extends Team {
+    private int suppliesDelivered;
+
+    public LogisticsTeam(String teamName, int resources, int suppliesDelivered) {
+        super(teamName, resources);
+        this.suppliesDelivered = suppliesDelivered;
+    }
+
+    @Override
+    public void useResources(int amount) {
+        if (this.resources >= amount) {
+            this.resources -= amount;
+            System.out.println(this.teamName + " used " + amount + " resources to deliver supplies.");
+        } else {
+            System.out.println(this.teamName + " does not have enough resources to deliver supplies!");
+        }
+    }
+
+    public void deliverSupplies(int supplies, String location) {
+        if (this.resources >= supplies) {
+            useResources(supplies);
+            this.suppliesDelivered += supplies;
+            System.out.println(this.teamName + " delivered " + supplies + " supplies to " + location + ". Total supplies delivered: " + this.suppliesDelivered);
+        } else {
+            System.out.println("Not enough resources to deliver supplies!");
+        }
     }
 }
 
@@ -99,70 +134,47 @@ class AffectedArea {
     }
 }
 
-// Class: TeamManager (Applies SRP by managing team operations)
-class TeamManager {
-    public void allocateResources(Team team, int amount) {
-        team.useResources(amount);
-    }
-
-    public void displayTeamStatus(Team team) {
-        team.displayStatus();
-    }
-}
-
-// Class: AreaManager (Applies SRP by managing area operations)
-class AreaManager {
-    public void rescueFromArea(AffectedArea area, int count) {
-        area.rescueVictims(count);
-    }
-
-    public void displayAreaStatus(AffectedArea area) {
-        area.displayAreaStatus();
-    }
-}
-
 // Main Class: DisasterSimulation
 public class DisasterSimulation {
     public static void main(String[] args) {
-        // Create Team objects
+        // Create team objects
         RescueTeam fireBrigade = new RescueTeam("Fire Brigade", 100, 5);
-        MedicalTeam medicalUnit = new MedicalTeam("Medical Unit", 80, 3, 50);
+        MedicalTeam medicalUnit = new MedicalTeam("Medical Unit", 80, 50);
+        LogisticsTeam supplyUnit = new LogisticsTeam("Supply Unit", 150, 30);
 
-        // Create AffectedArea objects
+        // Create affected areas
         AffectedArea downtown = new AffectedArea("Downtown", 50, 90);
         AffectedArea suburb = new AffectedArea("Suburb", 30, 60);
 
-        // Create managers
-        TeamManager teamManager = new TeamManager();
-        AreaManager areaManager = new AreaManager();
-
-        // Initial Status
+        // Display initial statuses
         System.out.println("Initial Team Status:");
-        teamManager.displayTeamStatus(fireBrigade);
-        teamManager.displayTeamStatus(medicalUnit);
+        fireBrigade.displayStatus();
+        medicalUnit.displayStatus();
+        supplyUnit.displayStatus();
 
         System.out.println("\nAffected Areas Status:");
-        areaManager.displayAreaStatus(downtown);
-        areaManager.displayAreaStatus(suburb);
+        downtown.displayAreaStatus();
+        suburb.displayAreaStatus();
 
         // Perform actions
         System.out.println("\nPerforming Rescue Missions:");
-        teamManager.allocateResources(fireBrigade, 20);
-        areaManager.rescueFromArea(downtown, 10);
+        fireBrigade.useResources(20);
+        downtown.rescueVictims(10);
 
         System.out.println("\nMedical Team Treating Patients:");
         medicalUnit.treatPatients(15, "critical");
 
-        System.out.println("\nPerforming Overloaded Mission:");
-        fireBrigade.performMission(15, "Fire Rescue");
+        System.out.println("\nLogistics Team Delivering Supplies:");
+        supplyUnit.deliverSupplies(40, "Downtown");
 
-        // Updated Status
+        // Updated statuses
         System.out.println("\nUpdated Team Status:");
-        teamManager.displayTeamStatus(fireBrigade);
-        teamManager.displayTeamStatus(medicalUnit);
+        fireBrigade.displayStatus();
+        medicalUnit.displayStatus();
+        supplyUnit.displayStatus();
 
         System.out.println("\nUpdated Affected Areas Status:");
-        areaManager.displayAreaStatus(downtown);
-        areaManager.displayAreaStatus(suburb);
+        downtown.displayAreaStatus();
+        suburb.displayAreaStatus();
     }
 }
