@@ -18,20 +18,17 @@ abstract class Team {
     }
 }
 
-// Derived Class 1: RescueTeam (Single Inheritance)
+// Derived Class: RescueTeam
 class RescueTeam extends Team {
     private int missionsCompleted;
 
-    // Constructor
     public RescueTeam(String teamName, int resources, int missionsCompleted) {
-        super(teamName, resources); // Call the constructor of the base class
+        super(teamName, resources);
         this.missionsCompleted = missionsCompleted;
     }
 
-    // Overriding the useResources method (Virtual Function)
     @Override
     public void useResources(int amount) {
-        // Custom behavior for RescueTeam
         if (this.resources >= amount) {
             this.resources -= amount;
             System.out.println(this.teamName + " used " + amount + " resources for rescue missions.");
@@ -40,10 +37,9 @@ class RescueTeam extends Team {
         }
     }
 
-    // Method to perform a rescue mission with additional parameters (Function Overloading)
     public void performMission(int resourceUsed, String missionType) {
         if (this.resources >= resourceUsed) {
-            useResources(resourceUsed); // Use the overridden method
+            useResources(resourceUsed);
             this.missionsCompleted++;
             System.out.println(this.teamName + " completed a " + missionType + " mission. Total missions: " + this.missionsCompleted);
         } else {
@@ -52,20 +48,17 @@ class RescueTeam extends Team {
     }
 }
 
-// Derived Class 2: MedicalTeam (Multilevel Inheritance)
+// Derived Class: MedicalTeam
 class MedicalTeam extends RescueTeam {
     private int patientsTreated;
 
-    // Constructor
     public MedicalTeam(String teamName, int resources, int missionsCompleted, int patientsTreated) {
-        super(teamName, resources, missionsCompleted); // Call the constructor of RescueTeam
+        super(teamName, resources, missionsCompleted);
         this.patientsTreated = patientsTreated;
     }
 
-    // Overriding the useResources method (Virtual Function)
     @Override
     public void useResources(int amount) {
-        // Custom behavior for MedicalTeam
         if (this.resources >= amount) {
             this.resources -= amount;
             System.out.println(this.teamName + " used " + amount + " resources to treat patients.");
@@ -74,7 +67,6 @@ class MedicalTeam extends RescueTeam {
         }
     }
 
-    // Method to treat patients (Function Overloading)
     public void treatPatients(int patients, String patientType) {
         this.patientsTreated += patients;
         System.out.println(this.teamName + " treated " + patients + " " + patientType + " patients. Total patients treated: " + this.patientsTreated);
@@ -87,14 +79,12 @@ class AffectedArea {
     private int victims;
     private int damageLevel;
 
-    // Constructor
     public AffectedArea(String location, int victims, int damageLevel) {
         this.location = location;
         this.victims = victims;
         this.damageLevel = damageLevel;
     }
 
-    // Method to rescue victims
     public void rescueVictims(int count) {
         if (this.victims >= count) {
             this.victims -= count;
@@ -104,50 +94,75 @@ class AffectedArea {
         }
     }
 
-    // Method to display area status
     public void displayAreaStatus() {
         System.out.println("Location: " + this.location + ", Victims: " + this.victims + ", Damage Level: " + this.damageLevel);
+    }
+}
+
+// Class: TeamManager (Applies SRP by managing team operations)
+class TeamManager {
+    public void allocateResources(Team team, int amount) {
+        team.useResources(amount);
+    }
+
+    public void displayTeamStatus(Team team) {
+        team.displayStatus();
+    }
+}
+
+// Class: AreaManager (Applies SRP by managing area operations)
+class AreaManager {
+    public void rescueFromArea(AffectedArea area, int count) {
+        area.rescueVictims(count);
+    }
+
+    public void displayAreaStatus(AffectedArea area) {
+        area.displayAreaStatus();
     }
 }
 
 // Main Class: DisasterSimulation
 public class DisasterSimulation {
     public static void main(String[] args) {
-        // Create objects for Rescue Teams
+        // Create Team objects
         RescueTeam fireBrigade = new RescueTeam("Fire Brigade", 100, 5);
         MedicalTeam medicalUnit = new MedicalTeam("Medical Unit", 80, 3, 50);
 
-        // Create objects for Affected Areas
+        // Create AffectedArea objects
         AffectedArea downtown = new AffectedArea("Downtown", 50, 90);
         AffectedArea suburb = new AffectedArea("Suburb", 30, 60);
 
-        // Display initial status
+        // Create managers
+        TeamManager teamManager = new TeamManager();
+        AreaManager areaManager = new AreaManager();
+
+        // Initial Status
         System.out.println("Initial Team Status:");
-        fireBrigade.displayStatus();
-        medicalUnit.displayStatus();
+        teamManager.displayTeamStatus(fireBrigade);
+        teamManager.displayTeamStatus(medicalUnit);
 
         System.out.println("\nAffected Areas Status:");
-        downtown.displayAreaStatus();
-        suburb.displayAreaStatus();
+        areaManager.displayAreaStatus(downtown);
+        areaManager.displayAreaStatus(suburb);
 
-        // Perform actions (Demonstrating Polymorphism)
+        // Perform actions
         System.out.println("\nPerforming Rescue Missions:");
-        fireBrigade.useResources(20); // Fire Brigade uses resources
-        downtown.rescueVictims(10);
+        teamManager.allocateResources(fireBrigade, 20);
+        areaManager.rescueFromArea(downtown, 10);
 
         System.out.println("\nMedical Team Treating Patients:");
-        medicalUnit.treatPatients(15, "critical"); // Medical Team treats critical patients
+        medicalUnit.treatPatients(15, "critical");
 
-        // Perform Rescue Team mission with function overloading
+        System.out.println("\nPerforming Overloaded Mission:");
         fireBrigade.performMission(15, "Fire Rescue");
 
-        // Display updated status
+        // Updated Status
         System.out.println("\nUpdated Team Status:");
-        fireBrigade.displayStatus();
-        medicalUnit.displayStatus();
+        teamManager.displayTeamStatus(fireBrigade);
+        teamManager.displayTeamStatus(medicalUnit);
 
         System.out.println("\nUpdated Affected Areas Status:");
-        downtown.displayAreaStatus();
-        suburb.displayAreaStatus();
+        areaManager.displayAreaStatus(downtown);
+        areaManager.displayAreaStatus(suburb);
     }
 }
