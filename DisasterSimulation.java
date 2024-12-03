@@ -1,69 +1,71 @@
-// Interface: TeamActions (Open/Closed Principle Applied)
-interface TeamActions {
-    void useResources(int amount);
-    void displayStatus();
-}
-
-// Abstract Class: Team (Implements the Interface)
-abstract class Team implements TeamActions {
+// Abstract Base Class: Team
+abstract class Team {
     protected String teamName;
     protected int resources;
 
+    // Constructor
     public Team(String teamName, int resources) {
         this.teamName = teamName;
         this.resources = resources;
     }
 
-    @Override
-    public abstract void useResources(int amount); // Force subclasses to implement
+    // Abstract Method to use resources (Virtual Function)
+    public abstract void useResources(int amount);
 
-    @Override
+    // Method to display team status
     public void displayStatus() {
         System.out.println("Team: " + this.teamName + ", Resources: " + this.resources);
     }
 }
 
-// Derived Class 1: RescueTeam
+// Derived Class 1: RescueTeam (Single Inheritance)
 class RescueTeam extends Team {
     private int missionsCompleted;
 
+    // Constructor
     public RescueTeam(String teamName, int resources, int missionsCompleted) {
-        super(teamName, resources);
+        super(teamName, resources); // Call the constructor of the base class
         this.missionsCompleted = missionsCompleted;
     }
 
+    // Overriding the useResources method (Virtual Function)
     @Override
     public void useResources(int amount) {
+        // Custom behavior for RescueTeam
         if (this.resources >= amount) {
             this.resources -= amount;
             System.out.println(this.teamName + " used " + amount + " resources for rescue missions.");
         } else {
-            System.out.println(this.teamName + " does not have enough resources for a rescue mission!");
+            System.out.println(this.teamName + " does not have enough resources to complete the rescue mission!");
         }
     }
 
+    // Method to perform a rescue mission with additional parameters (Function Overloading)
     public void performMission(int resourceUsed, String missionType) {
         if (this.resources >= resourceUsed) {
-            useResources(resourceUsed);
+            useResources(resourceUsed); // Use the overridden method
             this.missionsCompleted++;
             System.out.println(this.teamName + " completed a " + missionType + " mission. Total missions: " + this.missionsCompleted);
         } else {
-            System.out.println("Not enough resources to perform the mission!");
+            System.out.println("Not enough resources to complete the mission!");
         }
     }
 }
 
-// Derived Class 2: MedicalTeam
+// Derived Class 2: MedicalTeam (Multilevel Inheritance)
 class MedicalTeam extends Team {
     private int patientsTreated;
 
+    // Constructor
     public MedicalTeam(String teamName, int resources, int patientsTreated) {
-        super(teamName, resources);
+        super(teamName, resources); // Call the constructor of Team
         this.patientsTreated = patientsTreated;
     }
 
+    // Overriding the useResources method (Virtual Function)
     @Override
     public void useResources(int amount) {
+        // Custom behavior for MedicalTeam
         if (this.resources >= amount) {
             this.resources -= amount;
             System.out.println(this.teamName + " used " + amount + " resources to treat patients.");
@@ -72,39 +74,10 @@ class MedicalTeam extends Team {
         }
     }
 
+    // Method to treat patients (Function Overloading)
     public void treatPatients(int patients, String patientType) {
         this.patientsTreated += patients;
         System.out.println(this.teamName + " treated " + patients + " " + patientType + " patients. Total patients treated: " + this.patientsTreated);
-    }
-}
-
-// New Derived Class: LogisticsTeam (Open/Closed Extension)
-class LogisticsTeam extends Team {
-    private int suppliesDelivered;
-
-    public LogisticsTeam(String teamName, int resources, int suppliesDelivered) {
-        super(teamName, resources);
-        this.suppliesDelivered = suppliesDelivered;
-    }
-
-    @Override
-    public void useResources(int amount) {
-        if (this.resources >= amount) {
-            this.resources -= amount;
-            System.out.println(this.teamName + " used " + amount + " resources to deliver supplies.");
-        } else {
-            System.out.println(this.teamName + " does not have enough resources to deliver supplies!");
-        }
-    }
-
-    public void deliverSupplies(int supplies, String location) {
-        if (this.resources >= supplies) {
-            useResources(supplies);
-            this.suppliesDelivered += supplies;
-            System.out.println(this.teamName + " delivered " + supplies + " supplies to " + location + ". Total supplies delivered: " + this.suppliesDelivered);
-        } else {
-            System.out.println("Not enough resources to deliver supplies!");
-        }
     }
 }
 
@@ -114,12 +87,14 @@ class AffectedArea {
     private int victims;
     private int damageLevel;
 
+    // Constructor
     public AffectedArea(String location, int victims, int damageLevel) {
         this.location = location;
         this.victims = victims;
         this.damageLevel = damageLevel;
     }
 
+    // Method to rescue victims
     public void rescueVictims(int count) {
         if (this.victims >= count) {
             this.victims -= count;
@@ -129,6 +104,7 @@ class AffectedArea {
         }
     }
 
+    // Method to display area status
     public void displayAreaStatus() {
         System.out.println("Location: " + this.location + ", Victims: " + this.victims + ", Damage Level: " + this.damageLevel);
     }
@@ -137,41 +113,38 @@ class AffectedArea {
 // Main Class: DisasterSimulation
 public class DisasterSimulation {
     public static void main(String[] args) {
-        // Create team objects
+        // Create objects for Rescue Teams
         RescueTeam fireBrigade = new RescueTeam("Fire Brigade", 100, 5);
         MedicalTeam medicalUnit = new MedicalTeam("Medical Unit", 80, 50);
-        LogisticsTeam supplyUnit = new LogisticsTeam("Supply Unit", 150, 30);
 
-        // Create affected areas
+        // Create objects for Affected Areas
         AffectedArea downtown = new AffectedArea("Downtown", 50, 90);
         AffectedArea suburb = new AffectedArea("Suburb", 30, 60);
 
-        // Display initial statuses
+        // Display initial status
         System.out.println("Initial Team Status:");
         fireBrigade.displayStatus();
         medicalUnit.displayStatus();
-        supplyUnit.displayStatus();
 
         System.out.println("\nAffected Areas Status:");
         downtown.displayAreaStatus();
         suburb.displayAreaStatus();
 
-        // Perform actions
+        // Perform actions (Demonstrating Polymorphism)
         System.out.println("\nPerforming Rescue Missions:");
-        fireBrigade.useResources(20);
+        fireBrigade.useResources(20); // Fire Brigade uses resources
         downtown.rescueVictims(10);
 
         System.out.println("\nMedical Team Treating Patients:");
-        medicalUnit.treatPatients(15, "critical");
+        medicalUnit.treatPatients(15, "critical"); // Medical Team treats critical patients
 
-        System.out.println("\nLogistics Team Delivering Supplies:");
-        supplyUnit.deliverSupplies(40, "Downtown");
+        // Perform Rescue Team mission with function overloading
+        fireBrigade.performMission(15, "Fire Rescue");
 
-        // Updated statuses
+        // Display updated status
         System.out.println("\nUpdated Team Status:");
         fireBrigade.displayStatus();
         medicalUnit.displayStatus();
-        supplyUnit.displayStatus();
 
         System.out.println("\nUpdated Affected Areas Status:");
         downtown.displayAreaStatus();
